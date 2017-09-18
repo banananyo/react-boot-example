@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>ReactJS + Spring Data REST</title>
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="css/onsenui.css" />
+    <link rel="stylesheet" href="css/onsen-css-components.css" />
+</head>
+<body>
+
+    <!-- ความสามารถของ React คือมันจะเอาไฟล์ js มาแทนที่ div ตรงนี้ได้  -->
+    <!-- สังเกตุว่า id เป็น "react" นะ เสร็จแล้วตามไปดูที่ไฟล์ js/app_old_syntax.js -->
+    <!-- จะเจอบรรทัดสุดท้ายเขียนว่า ReactDOM.render(<App />, document.getElementById('react')); -->
+    <!-- โดย document.getElementById('react') นี่แหละเป็นตัวที่จะบอกว่า โค้ดเราทั้งหมดในไฟล์ .js จะมาแทนที่ <div> ตัวไหน -->
+    <!-- ในที่นี้ก็คือ <div id="react"> นั่นเอง -->
+    <div id="react"></div>
+
+    <script src="built/bundle.js"></script>
+</body>
+</html>
+
+

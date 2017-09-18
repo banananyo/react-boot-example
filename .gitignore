@@ -1,0 +1,10 @@
+# Created by .ignore support plugin (hsz.mobi)
+bin/
+gradle/
+.gradle/
+.idea/
+build/
+gradlew
+gradlew.bat
+node_modules/
+react-boot.iml
