@@ -15,8 +15,33 @@ var client = require('./client');
 // ส่วนใน { } ก็คือโค้ดของฟังก์ชั่นนั้น ๆ แล้วแต่ว่าจะ return อะไร หรือไม่ return ก็ได้
 var App = React.createClass({
 
-	renderToolbar: function() {
-		// ฟังงก์ชั่น renderToolbar คือเราตั้งเอง (หมายความว่าจะตั้งชื่ออื่นก็ได้)
+	render: function() {
+		// render เป็นฟังก์ชั่นพื้นฐาน ห้ามเปลี่ยนชื่อ โดยจะใช้บอกว่าอะไรจะอยู่บนหน้าจอบ้าง สำหรับ class นี้ (class App)
+		// โดย ฟังก์ชั่นนี้จะแสดง Ons.Page (Page ก็คือหน้าเว็บ )
+
+		// Ons.Page มีการ renderToolBar จากฟังก์ชั่น customRenderToolbar() ด้านบนไงล่ะ
+
+		// ใน Ons.Page มี คำพูดเปล่า ๆ ว่า Hello React & Spring Boot
+		// ต่อมาเป็น Ons.List ซึ่งมันคือลิสต์
+		// attribute ชื่อ dataSource คือ ข้อมูลที่จะนำมาแสดงในลิสต์ ในที่นี้มีค่าเป็น this.state.emp (emp คือ state ของ class นี้ โดยค่าเริ่มต้นของมันจะได้จากฟังก์ชั่น getInitialState() )
+		// ส่วน attribute ชื่อ renderRow คือ attribute ที่ใช้แสดง row แต่ละ row ในลิสต์นี้ (Row คือ ส่วนย่อยของ List) ในที่นี้คือได้จากฟังก์ชั้น customRenderRow()
+		// ส่วน attribute ชื่อ renderHeader คือ attribute ที่ใช้แสดง header ของลิสต์ ในที่นี้คือใส่ Ons.ListHeader เข้าไปตรง ๆ เลย ไม่ได้เรียกฟังก์ชั่น (attribute อื่นก็ทำแบบนี้ได้นะ)
+		
+		return(
+			<Ons.Page renderToolbar={this.customRenderToolbar} >
+				<h1>Hello React & Spring Boot</h1>
+				<Ons.List
+					dataSource={this.state.emp}
+					renderRow={this.customRenderRow}
+					renderHeader={() => <Ons.ListHeader>Employee List</Ons.ListHeader>}
+				/>
+			</Ons.Page>
+		)
+	}
+	,
+
+	customRenderToolbar: function() {
+		// ฟังงก์ชั่น customRenderToolbar คือเราตั้งเอง (หมายความว่าจะตั้งชื่ออื่นก็ได้)
 		// โดย return <Ons.ToolBar> หากนำไปใส่ฟังก์ชั่น render มันก็จะแสดงเป็น ToolBar บนหน้าเว็บ
 		return (
 			<Ons.Toolbar>
@@ -30,61 +55,77 @@ var App = React.createClass({
 		)
 	},
 
-    renderRow: function(row, index) {
+	customRenderRow: function(row, index) {
+		// ฟังก์ชั่นนี้เขียนขึ้นมาเองครับ โดยจะรับค่าเป็น row กับ index โดยค่าทั้งสองจะมาจาก dataSource ของ Ons.List
+		// มันจะเรียกฟังก์ชั่นนี้ซ้ำ ๆ ให้เองตามจำนวนข้อมูลจาก dataSource
 
-        const fname = row.firstName;
-        const lname = row.lastName;
+		// index คือ 0, 1, 2, .... เหมือน อาเรย์ครับ เพราะ this.state.emp คือ อาเรย์
+		// row คือ value ที่อยู่ใน อาเรย์นั้น ๆ 
+		// เช่นเมื่อ index เป็น 0 , row ก็จะเป็นข้อมูลตัวแรก
 
-        return (
+		// row.firstName หรือ row.lastName มาได้ยังไงก็ตามไปดูที่ Entity ที่ชื่อ Employee.java (ใน /java/com/example/demo)
+		// โดยแต่ละ row ใน List นี้จะแสดง ชื่อจริง : นามสกุล 
+		return (
 			<Ons.ListItem key={index}>
 				<div className='center'>
-                    {fname} : {lname}
+					{row.firstName} : {row.lastName}
 				</div>
 			</Ons.ListItem>
-        );
-    },
+		);
+	},
 
-	render: function() {
-		// render เป็นฟังก์ชั่นพื้นฐาน ห้ามเปลี่ยนชื่อ โดยจะใช้บอกว่าอะไรจะอยู่บนหน้าจอบ้าง สำหรับ class นี้ (class App)
-		// โดย มันจะแสดง Page ที่มี ToolBar อยู่ใน Page (Page ก็คือหน้าเว็บ แล้วหน้าเว็บก็มี ToolBar)
-		// ถัดจาด ToolBar ก็เป็น คำพูดเปล่า ๆ ว่า Hello World
-		return(
-			<Ons.Page
-				renderToolbar={this.renderToolbar} >
-				<p>Hello World</p>
-				<Ons.List
-					dataSource={this.state.emp}
-					renderRow={this.renderRow}
-					renderHeader={() => <Ons.ListHeader>Employee List</Ons.ListHeader>}
-				/>
-			</Ons.Page>
-		)
-	}
-
-	// หากจะเพิ่มฟังก์ชั่นอื่น ๆ ก็ใส่คอมม่าตามตรงนี้ แล้วเพิ่มได้เลย
-	,
     componentDidMount: function() {
+		// ฟังก์ชั่น componentDidMount เป็นฟังก์ชั่นของ react ซึ่งมันจะถูกเรียกเอง หลังจาก ui ถูก render (แสดง) แล้ว
+		// ตรงนี้คือเรียกฟังก์ชั่น employeeList()
         this.employeeList();
     },
 
 	getInitialState: function() {
+		// ฟังก์ชั่นนี้เป็นของ react เป็นการกำหนดค่าเริ่มต้นให้กับ state ของ class นี้ โดยต้อง return ข้อมูล state เริ่มต้น ในรูปแบบ json
+		// json คืออะไร .... มันคือ object ของ javascript ต้องขึ้นต้นด้วย { และจบด้วย }
+		// ข้อมูลด้านในประกอบด้วย key (ในที่นี้คือ emp) ต่อด้วย : ตามด้วย value ของ key นั้น (ในที่นี้คือ [] อาเรย์เปล่า ๆ)
+		// เราสามารถเพิ่มข้อมูลได้หลาย ๆ อย่างใน object นี้โดยการเพิ่มคอมม่า แล้วใส่ key กับ value เข้าไป เช่น อยากเพิ่ม name = "john" ก็แบบนี้ ...
+		// {
+		//    emp: [] ,
+		//	  name: "john"
+		// };
+		// state ใน react คือตัวแปลที่คล้าย ๆ กับ global ใน java จะสามารถเรียกใช้ได้ทุกที่ใน class นี้โดยใช้ this.state เช่น
+		// this.state.emp
         return {
             emp: []
         };
 	},
     employeeList: function() {
-		fetch('/employee/Frodo')
+		// employeeList() คือฟังก์ชั่นที่ผมสร้างขึ้นมาเอง
+		// fetch() คือฟังก์ชั่นที่ใช้เรียก API  (โดยในบางทีมันอาจจะหน่วง ๆ บ้าง เวลาดึงข้อมูล)
+		// API คืออะไร
+		// API คือ สิ่งที่จะส่งข้อมูลกลับมาให้ เมื่อมันถูกเรียก 
+		// โดยปกติ API จะอยู่ที่ Back-End ซึ่งก็คือ ResController ของ java นั่นเอง อยากรู้เป็นยังไงตามไปดูไฟล์ /java/com/example/demo/RestAPIController.java
+
+		// fetch() เรียก API ที่  url คือ /employee/list 
+		// จะได้ข้อมูลกลับมาเป็น object โดยเราสามารถใช้ then() เพื่อรับข้อมูล และแปลงเป็น json type โดยใช้ data.json()
+		// จากนั้นก็ then() อีกที เพื่อที่จะเอา data (ที่เป็น json) ไปใส่ใน state ที่ชื่อ emp
+		// ใช้คำสั่ง this.setState();
+		fetch('/employee/list')
 			.then(data => data.json())
 			.then(data => {
-                this.setState({ emp: data });
+				this.setState({ emp: data });
+				// console.log() เป็นฟังก์ชั่นของ javascript ทำหน้าที่คล้าย System.out.println() ใน java
+				// ดูได้โดยการกด F12 แล้วเลือก tab console ถ้าเป็น google chrome
                 console.log(this.state.emp);
     		});
-    }
+	}
+	// หากจะเพิ่มฟังก์ชั่นอื่น ๆ ก็ใส่คอมม่าตามตรงนี้ แล้วเพิ่มได้เลย
+	// เช่นแบบนี้ .....
+	,
+	hello: function(){
+		console.log("hello world");
+	}
 
 });
 
 
-// การสร้าง class ui ของ react เขียนได้อีกแบบนะ แบบด้านล่างนี้จะได้ผลลัพธ์เหมือนด้านบน
+// การสร้าง class ui ของ react เขียนได้อีกแบบนะ นอกจาก React.createClass() แบบด้านล่างนี้จะได้ผลลัพธ์เหมือนด้านบน
 /*
 export default class App extends React.Component {
     renderToolbar (){
