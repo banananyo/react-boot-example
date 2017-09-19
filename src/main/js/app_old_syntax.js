@@ -95,25 +95,26 @@ var App = React.createClass({
             emp: []
         };
 	},
-    employeeList: function() {
+    
+	employeeList: function() {
 		// employeeList() คือฟังก์ชั่นที่ผมสร้างขึ้นมาเอง
-		// fetch() คือฟังก์ชั่นที่ใช้เรียก API  (โดยในบางทีมันอาจจะหน่วง ๆ บ้าง เวลาดึงข้อมูล)
+		// client() คือฟังก์ชั่นที่ใช้เรียก API  โดยอาจารย์เขียนมาให้เป็น library แล้ว
+		// หน้าที่เราคือ import มัน ขึ้นไปดูที่บรรทัด 5
+		
 		// API คืออะไร
 		// API คือ สิ่งที่จะส่งข้อมูลกลับมาให้ เมื่อมันถูกเรียก 
 		// โดยปกติ API จะอยู่ที่ Back-End ซึ่งก็คือ ResController ของ java นั่นเอง อยากรู้เป็นยังไงตามไปดูไฟล์ /java/com/example/demo/RestAPIController.java
 
-		// fetch() เรียก API ที่  url คือ /employee/list 
-		// จะได้ข้อมูลกลับมาเป็น object โดยเราสามารถใช้ then() เพื่อรับข้อมูล และแปลงเป็น json type โดยใช้ data.json()
-		// จากนั้นก็ then() อีกที เพื่อที่จะเอา data (ที่เป็น json) ไปใส่ใน state ที่ชื่อ emp
+		// client() เรียก API ที่  url คือ /employee/list
+		// จะได้ข้อมูลกลับมาเป็น object ที่ชื่อ response
 		// ใช้คำสั่ง this.setState();
-		fetch('/employee/list')
-			.then(data => data.json())
-			.then(data => {
-				this.setState({ emp: data });
-				// console.log() เป็นฟังก์ชั่นของ javascript ทำหน้าที่คล้าย System.out.println() ใน java
-				// ดูได้โดยการกด F12 แล้วเลือก tab console ถ้าเป็น google chrome
-                console.log(this.state.emp);
-    		});
+		
+		client({method: 'GET', path: '/employee/list'}).done(response => {
+			// console.log() เป็นฟังก์ชั่นของ javascript ทำหน้าที่คล้าย System.out.println() ใน java
+			// ดูได้โดยการกด F12 แล้วเลือก tab console ถ้าเป็น google chrome
+			console.log(response);
+			this.setState({emp: response.entity});
+		});
 	}
 	// หากจะเพิ่มฟังก์ชั่นอื่น ๆ ก็ใส่คอมม่าตามตรงนี้ แล้วเพิ่มได้เลย
 	// เช่นแบบนี้ .....
